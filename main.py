@@ -137,6 +137,7 @@ OUTPUT["Date"]=OUTPUT["Date"].apply(lambda x: datetime.fromtimestamp(int(x)*0.00
 VARLIST.insert(0, "ProductId") 
 OUTPUT = OUTPUT[VARLIST]
 
+print(OUTPUT)
 
 #### COMPONENT:::
 with open( "out/tables/" + OUTPUT_FILE , 'a') as f:

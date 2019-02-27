@@ -145,13 +145,13 @@ from keboola import docker
 # initialize the library
 cfg = docker.Config()
 # get csv file name with full path from output mapping
-outName = cfg.get_expected_output_tables()['full_path']
-outDestination = cfg.get_expected_output_tables()['destination']
-pk = cfg.get_expected_output_tables()['primary_key']
-incremental = cfg.get_expected_output_tables()['incremental']
-delete_where_values = cfg.get_expected_output_tables()['delete_where_values']
-delete_where_operator = cfg.get_expected_output_tables()['delete_where_operator']
-delimiter = cfg.get_expected_output_tables()['delimiter']
+outName = cfg.get_expected_output_tables()[0]['full_path']
+outDestination = cfg.get_expected_output_tables()[0]['destination']
+pk = cfg.get_expected_output_tables()[0]['primary_key']
+incremental = cfg.get_expected_output_tables()[0]['incremental']
+delete_where_values = cfg.get_expected_output_tables()[0]['delete_where_values']
+delete_where_operator = cfg.get_expected_output_tables()[0]['delete_where_operator']
+delimiter = cfg.get_expected_output_tables()[0]['delimiter']
 
 #write the manifesto file
 cfg.write_table_manifest(outName, destination=outDestination, 

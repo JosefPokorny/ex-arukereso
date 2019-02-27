@@ -34,7 +34,6 @@ with open("/data/config.json", mode="r") as config_file:
 
 
 
-
 USERNAME = config_dict["parameters"]["username"]
 PASSWORD = config_dict["parameters"]["#password"]
 PAST_DAYS = config_dict["parameters"]["past"]
@@ -42,7 +41,10 @@ FROM = config_dict["parameters"]["from"]
 TO = config_dict["parameters"]["to"]
 VARLIST = config_dict["parameters"]["VARLIST"].replace(" ","").split(",")
 OUTPUT_FILE = config_dict["parameters"]["Output_file_name"]
-
+DESTINATION_BUCKET = config_dict["parameters"]["destination_bucket"]
+INKREMENTAL = config_dict["parameters"]["incremental"]
+PK = config_dict["parameters"]["PK"].replace(" ","").split(",")
+DSTINATION = DESTINATION_BUCKET + OUTPUT_FILE.replace(".csv","")
 
 
 
@@ -144,22 +146,13 @@ from keboola import docker
 
 # initialize the library
 cfg = docker.Config()
-# get csv file name with full path from output mapping
-outName = cfg.get_expected_output_tables()[0]['full_path']
-outDestination = cfg.get_expected_output_tables()[0]['destination']
-pk = cfg.get_expected_output_tables()[0]['primary_key']
-incremental = cfg.get_expected_output_tables()[0]['incremental']
-delete_where_values = cfg.get_expected_output_tables()[0]['delete_where_values']
-delete_where_operator = cfg.get_expected_output_tables()[0]['delete_where_operator']
-delimiter = cfg.get_expected_output_tables()[0]['delimiter']
 
-#write the manifesto file
-cfg.write_table_manifest(outName, destination=outDestination, 
-                                    primary_key=pk, 
-                                    incremental=incremental,
-                                    columns = list(OUTPUT.columns))
 
 with open( "out/tables/" + OUTPUT_FILE , 'a') as f:
+        cfg.write_table_manifest(f, destination=DESTINATION, 
+                                    primary_key=PK, 
+                                    incremental=INKREMENTAL,
+                                    columns = OUTPUT.columns.values.tolist())
         OUTPUT.to_csv(f, header=False, index=False)
 
 

@@ -137,11 +137,32 @@ OUTPUT["Date"]=OUTPUT["Date"].apply(lambda x: datetime.fromtimestamp(int(x)*0.00
 VARLIST.insert(0, "ProductId") 
 OUTPUT = OUTPUT[VARLIST]
 
-print(OUTPUT)
+print(OUTPUT.iloc[1,:])
 
 #### COMPONENT:::
+from keboola import docker
+
+# initialize the library
+cfg = docker.Config()
+# get csv file name with full path from output mapping
+outName = cfg.get_expected_output_tables()['full_path']
+outDestination = cfg.get_expected_output_tables()['destination']
+pk = cfg.get_expected_output_tables()['primary_key']
+incremental = cfg.get_expected_output_tables()['incremental']
+delete_where_values = cfg.get_expected_output_tables()['delete_where_values']
+delete_where_operator = cfg.get_expected_output_tables()['delete_where_operator']
+delimiter = cfg.get_expected_output_tables()['delimiter']
+
+#write the manifesto file
+cfg.write_table_manifest(outName, destination=outDestination, 
+                                    primary_key=pk, 
+                                    incremental=incremental,
+                                    delete_where_operator=delete_where_operator,
+                                    delete_where_values=delete_where_values,
+                                    columns = list(OUTPUT.columns))
+
 with open( "out/tables/" + OUTPUT_FILE , 'a') as f:
-        OUTPUT.to_csv(f, header=True, index=False)
+        OUTPUT.to_csv(f, header=False, index=False)
 
 
 

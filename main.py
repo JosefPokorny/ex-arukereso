@@ -157,8 +157,6 @@ delimiter = cfg.get_expected_output_tables()[0]['delimiter']
 cfg.write_table_manifest(outName, destination=outDestination, 
                                     primary_key=pk, 
                                     incremental=incremental,
-                                    delete_where_operator=delete_where_operator,
-                                    delete_where_values=delete_where_values,
                                     columns = list(OUTPUT.columns))
 
 with open( "out/tables/" + OUTPUT_FILE , 'a') as f:

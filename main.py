@@ -140,7 +140,7 @@ OUTPUT = OUTPUT[VARLIST]
 
 #### COMPONENT:::
 with open( "out/tables/" + OUTPUT_FILE , 'a') as f:
-        OUTPUT.to_csv(f, header=False, index=False)
+        OUTPUT.to_csv(f, header=True, index=False)
 
 
 

@@ -147,9 +147,9 @@ from keboola import docker
 # initialize the library
 cfg = docker.Config()
 
-
-with open( "out/tables/" + OUTPUT_FILE , 'a') as f:
-        cfg.write_table_manifest(f, destination=DESTINATION, 
+out_file = "out/tables/" + OUTPUT_FILE
+with open( out_file , 'a') as f:
+        cfg.write_table_manifest(out_file, destination=DESTINATION, 
                                     primary_key=PK, 
                                     incremental=INKREMENTAL,
                                     columns = OUTPUT.columns.values.tolist())

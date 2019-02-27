@@ -148,12 +148,14 @@ from keboola import docker
 cfg = docker.Config()
 
 out_file = "out/tables/" + OUTPUT_FILE
+COLUMNS = OUTPUT.columns.values.tolist()
+
 with open( out_file , 'a') as f:
         cfg.write_table_manifest(out_file, destination=DESTINATION, 
                                     primary_key=PK, 
                                     incremental=INKREMENTAL,
-                                    columns = OUTPUT.columns.values.tolist())
-        OUTPUT.to_csv(f, header=False, index=False)
+                                    columns = COLUMNS)
+        OUTPUT.to_csv(f,sep=",", header=False, index=False)
 
 
 

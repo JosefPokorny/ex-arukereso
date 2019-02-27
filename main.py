@@ -31,27 +31,17 @@ import json
 with open("/data/config.json", mode="r") as config_file:
     confic_dict = json.load(config_file)
         
-### SCRIPT       
-#confic_dict ={
-#  "to": "",
-#  "from": "",
-#  "past": 1,
-#  "#password": "MallHu123",
-#  "username": "dominik.fabicki@mallgroup.com",
-#  "Output_file_name": 'my_csv.csv',
-#  "VARLIST": "Date, Product, Category, ClickThrough, TotalCost, DefaultPrice, AVGPosition, OtherPrice, SelfProductView"
-#}
 
 
 
 
-USERNAME = confic_dict["username"]
-PASSWORD = confic_dict["#password"]
-PAST_DAYS = confic_dict["past"]
-FROM = confic_dict["from"]
-TO = confic_dict["to"]
-VARLIST = confic_dict["VARLIST"].replace(" ","").split(",")
-OUTPUT_FILE = confic_dict["Output_file_name"]
+USERNAME = config_dict["parameters"]["username"]
+PASSWORD = config_dict["parameters"]["#password"]
+PAST_DAYS = config_dict["parameters"]["past"]
+FROM = config_dict["parameters"]["from"]
+TO = config_dict["parameters"]["to"]
+VARLIST = config_dict["parameters"]["VARLIST"].replace(" ","").split(",")
+OUTPUT_FILE = config_dict["parameters"]["Output_file_name"]
 
 
 
@@ -152,9 +142,5 @@ OUTPUT = OUTPUT[VARLIST]
 with open( "out/tables/" + OUTPUT_FILE , 'a') as f:
         OUTPUT.to_csv(f, header=False, index=False)
 
-
-#### SCRIPT:::Writing to the output table
-with open( OUTPUT_FILE , 'a') as f:
-        OUTPUT.to_csv(f, header=False, index=False)
 
 

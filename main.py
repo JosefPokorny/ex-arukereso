@@ -29,7 +29,7 @@ import json
 
 ### IN KBC
 with open("/data/config.json", mode="r") as config_file:
-    confic_dict = json.load(config_file)
+    config_dict = json.load(config_file)
         
 
 

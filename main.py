@@ -44,7 +44,7 @@ OUTPUT_FILE = config_dict["parameters"]["Output_file_name"]
 DESTINATION_BUCKET = config_dict["parameters"]["destination_bucket"]
 INKREMENTAL = config_dict["parameters"]["incremental"]
 PK = config_dict["parameters"]["PK"].replace(" ","").split(",")
-DESTINATION = DESTINATION_BUCKET + OUTPUT_FILE.replace(".csv","")
+DESTINATION = DESTINATION_BUCKET + "." + OUTPUT_FILE.replace(".csv","")
 
 
 

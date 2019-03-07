@@ -2,7 +2,7 @@
 Keboola connection extraktor from administration portal of Arukereso.hu
 
 ## Description
-Extraktor prodvides daily statistics on individual product level available from http://www.arukereso.hu/admin/AkStatistics after the login. 
+Extraktor provides daily statistics on individual product level available from http://www.arukereso.hu/admin/AkStatistics after the login. 
 There are two way to input the period of interest 
 
 a) number of past days starting from yesterday, 

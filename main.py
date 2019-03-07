@@ -24,15 +24,12 @@ from requests import Request, Session
 import json
 
 
-###############  KBC FORM ##########
+### KBC CONFIG FORM ###
 
 
-### IN KBC
 with open("/data/config.json", mode="r") as config_file:
     config_dict = json.load(config_file)
         
-
-
 
 USERNAME = config_dict["parameters"]["username"]
 PASSWORD = config_dict["parameters"]["#password"]
@@ -48,10 +45,10 @@ DESTINATION = DESTINATION_BUCKET + "." + OUTPUT_FILE.replace(".csv","")
 
 
 
-############# INPUT manipulation and chceks
+### INPUT manipulation and chceks ###
 
 if FROM == "" or TO == "":
-    FROM_date = date.today()- timedelta(PAST_DAYS) ### tisíciny vteřiny
+    FROM_date = date.today()- timedelta(PAST_DAYS) 
     TO_date = date.today()- timedelta(1)
 else: 
     FROM_date = min(datetime.strptime(FROM, "%Y/%m/%d").date(),date.today()- timedelta(PAST_DAYS))
@@ -63,7 +60,7 @@ FROM_ms = FROM_dt.timestamp() * 1000
 TO_ms = TO_dt.timestamp() * 1000
 
 
-##########  PARAMETERS  #####################
+###  PARAMETERS  ###
 
 WEB_login = "https://www.arukereso.hu/admin/Login"
 WEB_stat = "https://www.arukereso.hu/admin/AkStatistics"
@@ -71,45 +68,39 @@ WEB_ajax = "https://www.arukereso.hu/admin/AjaxStats"
 
 
 
-######## LOGIN #####
+### LOGIN ###
 
 
-login_form = {"PostBack" : "true", "Operation" : "Login", "Type" : "" ,"Identifier" : USERNAME, "Password": PASSWORD}
+login_form = {"PostBack" : "true", "Operation" : "Login", "Type" : "" ,"Identifier" : USERNAME, "Password": PASSWORD
 
-
-## !!! přidat specifikaci header
-
-#log=requests.post(WEB_login, data = login_form)
 s = Session()
 req = Request('POST',WEB_login, data=login_form)
 prepped = req.prepare()
 log = s.send(prepped)
 
-# check: Login proceeds correctly  -- přidat failure
+# check: Login proceeds correctly 
 #print("Logged-in? " + str(BeautifulSoup(log.text, "lxml").title.string == 'Árukereső.hu - Admin'))
 
 
-
-######### get the list to download --- Loop over chunks
+### MAIN Loop over chunks ###
 OUTPUT = pd.DataFrame()
 counter = 0
-day = int(FROM_ms)
+day = int(FROM_ms) #starting from date from
 
-while day <= int(TO_ms):
+while day <= int(TO_ms): #loop over every day in period  by adding one day until the date TO
     while_check = 1
     chunk = 0
+    datestring = str(day)+ "-" + str(day) 
 
-    datestring = str(day)+ "-" + str(day) #!!!! vždy pouze jeden den 
 
-
-    while while_check==1:  #chunk<5
+    while while_check==1:  # loop over all chunk of data in given day
         payload = {"type":"productstat" , 'datestring': datestring , 'chunk': str(chunk)}
         r=s.get(WEB_ajax, params=payload, data=payload)
         d = json.loads(r.text)
 
-        if d == {'End': True, 'SumAllowance': 0, 'Sum': []}:
-            while_check = 0
-        else:
+        if d == {'End': True, 'SumAllowance': 0, 'Sum': []}:  # the empty chunk looks like this
+            while_check = 0 # which stops the loop
+        else: #processing the chunk
             temp_out = pd.DataFrame(d["ProductId"])
             temp_out.columns = ['ProductId','xx']
 
@@ -124,12 +115,12 @@ while day <= int(TO_ms):
             OUTPUT=OUTPUT.append(pd.DataFrame(temp_out),ignore_index=False)
  
         chunk += 1
-        time.sleep(1)
+        time.sleep(1) ## minimal time delay between two hits of arukereso page
         
     day += 86400*1000  #one day in ms
     
 
-####### úprava OUTPUTU
+### Processing of output data ###
 
 
 OUTPUT.index = range( 0,len(OUTPUT))
@@ -139,9 +130,9 @@ OUTPUT["Date"]=OUTPUT["Date"].apply(lambda x: datetime.fromtimestamp(int(x)*0.00
 VARLIST.insert(0, "ProductId") 
 OUTPUT = OUTPUT[VARLIST]
 
-print(OUTPUT.iloc[1,:])
+print(OUTPUT.iloc[1,:]) #visual check of output data
 
-#### COMPONENT:::
+### Writing to Keboola storage ###
 from keboola import docker
 
 # initialize the library

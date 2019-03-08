@@ -26,4 +26,4 @@ You could access the Arukereso extractor in Keboola project after login by addin
 *.../extractors/revolt-bi.ex-arukereso*
 
 
-Prepared by  ![alt text](https://www.revolt.bi/wp-content/uploads/2018/08/mail-logo-zluta.png "revolt.bi")
+![alt text](https://www.revolt.bi/wp-content/uploads/2018/08/mail-logo-zluta.png "revolt.bi")
